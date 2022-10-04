@@ -18,12 +18,16 @@ int16_t TerrainAltitude::getAltitude(float lat_deg, float lon_deg){
     lon = lon_deg;
     switch(datatype){
         case 1:     // hgt file 
-            database_name = datafolder_path + "N" + std::to_string(int(lat)) + "E" + std::to_string(int(lon)) + ".hgt";
+            if(lon<10){
+                database_name = datafolder_path + "N" + std::to_string(int(lat)) + "E00" + std::to_string(int(lon)) + ".hgt";
+            }
+            else if(lon<100){
+                database_name = datafolder_path + "N" + std::to_string(int(lat)) + "E0" + std::to_string(int(lon)) + ".hgt";
+            }
+            else {
+                database_name = datafolder_path + "N" + std::to_string(int(lat)) + "E0" + std::to_string(int(lon)) + ".hgt";
+            }
             findAltitude_SRTMGL1();
-            break;
-        case 2:
-            database_name = datafolder_path + "n" + std::to_string(int(lat)) + "e" + std::to_string(int(lon)) + ".hgts";
-            findAltitude_NASADEM_SHHP();
             break;
         default:
             break;
