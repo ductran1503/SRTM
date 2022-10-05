@@ -55,6 +55,12 @@ int main(){
     altitude = terrain.getAltitude(48.85159956038229,2.3289299011230473);
     std::cout << "Paris: " <<std::to_string(altitude)<< std::endl;
 
+    altitude = terrain.getAltitude(21.03518,105.90928);
+    std::cout << "Sai Dong: " <<std::to_string(altitude)<< std::endl;
+
+    altitude = terrain.getAltitude(20.95907,105.93352);
+    std::cout << "Ecopark: " <<std::to_string(altitude)<< std::endl;
+
     std::chrono::duration<double> time = end -start;
     std::cout << std::to_string(altitude)<< std::endl;
     std::cout << "elapsed time: " << std::to_string(time.count())<< "(s)"<< std::endl;
