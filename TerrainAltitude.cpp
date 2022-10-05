@@ -25,9 +25,7 @@ void TerrainAltitude::updateGrid(){
     current_grid_lon = int (lon);
     std::string lat_word;
     std::string lon_word;
-    std::ifstream databasefile;
-    char c;
-    convertByteToInt convert;
+
  
     if(current_grid_lon<10){
         lon_word = "E00" + std::to_string(current_grid_lon);
@@ -48,32 +46,30 @@ void TerrainAltitude::updateGrid(){
     }  
     database_name = datafolder_path + lat_word + lon_word + ".hgt";
 
-    //test
-    std::cout << "datafilename:" << database_name << std::endl; 
-    //
+}   
+
+void TerrainAltitude::readAltitude(){
+    int col,row;
+    std::ifstream databasefile;
+    convertByteToInt convert;
+    char c;
+    row = int((lat - int(lat))*3600.0);
+    col = int((lon - int(lon))*3600.0);
 
     databasefile.open(database_name, std::ios::binary | std::ios::in);
     if(!databasefile){
         std::cerr << "could not open file" << std::endl;
         return;
     }
-    for(int i = 0; i<3601; i++){
-        for( int j = 0; j<3601; j++){
-            databasefile.read(&c,1);
-            convert.c[1] = c;
-            databasefile.read(&c,1);
-            convert.c[0] = c;
-            database.push_back(convert.i);
-        }
-    }
-    databasefile.close();
-}   
 
-void TerrainAltitude::readAltitude(){
-    int col,row;
-    row = int((lat - int(lat))*3600.0);
-    col = int((lon - int(lon))*3600.0);
-    altitude = database[(3601-row-1)*3601+col-1];
+    databasefile.seekg((3601-row -1)*3601*2+col*2,databasefile.beg);
+    databasefile.read(&c,1);
+    convert.c[1] = c;
+    databasefile.read(&c,1);
+    convert.c[0] = c;
+    database.push_back(convert.i);
+    databasefile.close();
+    altitude = convert.i;
 }
 
 
@@ -94,18 +90,4 @@ int16_t TerrainAltitude::getAltitude(float lat_deg, float lon_deg){
 
 TerrainAltitude::TerrainAltitude(std::string path){
     datafolder_path = path;
-}
-
-// find the data file that contain data for the current postition (lat, lon)
-// filename format: N+SW_lat+E+SW_lon+".hgt"
-int TerrainAltitude::getDataBase(){
-    switch(datatype){
-        case 1:     // hgt file 
-            database_name = datafolder_path + "N" + std::to_string(int(lat)) + "E" + std::to_string(int(lon)) + ".hgt";
-            break;
-        case 2:
-            database_name = datafolder_path + "n" + std::to_string(int(lat)) + "e" + std::to_string(int(lon)) + ".hgts";
-            break;
-    }
-    return 0;
 }

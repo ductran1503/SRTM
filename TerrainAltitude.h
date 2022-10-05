@@ -36,7 +36,7 @@ class TerrainAltitude{
     void readAltitude();
     // read whole data from data file to an array of float variables
     // return -1 if could not open file, 1 if could open file
-    int getDataBase();
+
 
     public:
     TerrainAltitude(std::string path);
